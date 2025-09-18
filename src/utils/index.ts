@@ -1,46 +1,22 @@
-// 格式化日期
-export const formatDate = (
-  date: Date | string,
-  format: string = "YYYY-MM-DD"
-) => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
+// 导出所有工具函数和 API
+export * from "./api";
 
-  switch (format) {
-    case "YYYY-MM-DD":
-      return `${year}-${month}-${day}`;
-    case "YYYY/MM/DD":
-      return `${year}/${month}/${day}`;
-    default:
-      return `${year}-${month}-${day}`;
-  }
-};
+// 环境配置工具
+export const getEnvConfig = () => ({
+  isDev: import.meta.env.DEV,
+  isProd: import.meta.env.PROD,
+  enableMSW: import.meta.env.VITE_ENABLE_MSW !== "false",
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || "",
+});
 
-// 深拷贝
-export const deepClone = <T>(obj: T): T => {
-  if (obj === null || typeof obj !== "object") {
-    return obj;
-  }
-
-  if (obj instanceof Date) {
-    return new Date(obj.getTime()) as unknown as T;
-  }
-
-  if (obj instanceof Array) {
-    return obj.map((item) => deepClone(item)) as unknown as T;
-  }
-
-  if (typeof obj === "object") {
-    const clonedObj = {} as T;
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        clonedObj[key] = deepClone(obj[key]);
-      }
-    }
-    return clonedObj;
-  }
-
-  return obj;
+// 打印当前环境配置（用于调试）
+export const logEnvConfig = () => {
+  const config = getEnvConfig();
+  console.log("🔧 Environment Config:", {
+    mode: import.meta.env.MODE,
+    isDev: config.isDev,
+    isProd: config.isProd,
+    enableMSW: config.enableMSW,
+    apiBaseUrl: config.apiBaseUrl,
+  });
 };
